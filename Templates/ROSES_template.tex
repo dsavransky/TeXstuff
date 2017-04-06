@@ -1,0 +1,219 @@
+%!TEX TS-program = pdflatexmk
+\documentclass[oneside,12pt]{amsart}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in,footskip = 0.333in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
+\usepackage{url}
+\usepackage{setspace}
+\usepackage{calc}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{pdflscape}
+\usepackage{rotating}
+\usepackage{pdfpages}
+\usepackage{wrapfig}
+\usepackage{fancyvrb}
+
+%caption setup
+\usepackage[margin=0.5cm]{caption}
+\usepackage{subcaption}
+
+%% Draft Watermark Toggle
+%\usepackage{draftwatermark}
+%\SetWatermarkText{DRAFT}
+%\SetWatermarkScale{5}
+
+%%if using bibtex:
+%\usepackage[round]{natbib}
+%\renewcommand{\bibsection}{} %clear ref title
+
+%if using bibaltex:
+\usepackage[citestyle=authoryear,bibstyle=numeric, natbib=true, backend=bibtex]{biblatex}
+\addbibresource{Main.bib}
+
+%set up header
+\setlength{\headheight}{0.2in}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small \sc PI Name}
+\chead{\small \sc Program Call}
+\rhead{\footnotesize \thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+%set linespacing
+\renewcommand{\baselinestretch}{1}\normalsize
+
+%fix toc
+\setcounter{tocdepth}{3}% to get subsubsections in toc
+\makeatletter
+\def\@tocline#1#2#3#4#5#6#7{\relax
+  \ifnum #1>\c@tocdepth % then omit
+  \else
+    \par \addpenalty\@secpenalty\addvspace{#2}%
+    \begingroup \hyphenpenalty\@M
+    \@ifempty{#4}{%
+      \@tempdima\csname r@tocindent\number#1\endcsname\relax
+    }{%
+      \@tempdima#4\relax
+    }%
+    \parindent\z@ \leftskip#3\relax \advance\leftskip\@tempdima\relax
+    \rightskip\@pnumwidth plus4em \parfillskip-\@pnumwidth
+    #5\leavevmode\hskip-\@tempdima
+      \ifcase #1
+       \or\or \hskip 1em \or \hskip 2em \else \hskip 3em \fi%
+      #6\nobreak\relax
+    \dotfill\hbox to\@pnumwidth{\@tocpagenum{#7}}\par
+    \nobreak
+    \endgroup
+  \fi}
+\makeatother
+
+
+%section numbering
+\renewcommand{\thesubsection}{\alph{subsection}}
+\renewcommand{\thesubsubsection}{\roman{subsubsection}}
+\makeatletter
+\renewcommand{\p@subsection}{\thesection.}
+\renewcommand{\p@subsubsection}{\thesection.\thesubsection.}
+\makeatother
+
+\newcommand\invisiblesection[1]{%
+  \refstepcounter{section}%
+  %\refstepcounter{page}  %%only if numbering pages within sections
+  \addcontentsline{toc}{section}{\protect\numberline{\thesection.}#1}%
+  \sectionmark{#1}}
+  
+\newcommand\invisiblesubsection[1]{%
+  \refstepcounter{subsection}%
+  \addcontentsline{toc}{subsection}{\thesubsection.{\hskip 1em}#1}%
+  \sectionmark{#1}}
+  
+
+%%page numbering by section (i.e. 1-1, 1-2, 2-1, etc)
+%\numberwithin{page}{section}
+%\renewcommand{\thepage}{\thesection-\arabic{page}}
+%
+%% Make sure that page starts from 1 with every \section
+%\usepackage{etoolbox}
+%\makeatletter
+%\patchcmd{\@sect}% <cmd>
+%  {\protected@edef}% <search>
+%  {\def\arg{#1}\def\arg@{section}%
+%   \ifx\arg\arg@\stepcounter{page}\fi%
+%   \protected@edef}% <replace>
+%  {}{}% <success><failure>
+%\makeatother
+
+ 
+ 
+% private defs
+\def\mf{\mathbf}
+\def\mb{\mathbb}
+\def\mc{\mathcal}
+\newcommand{\R}{\mathbf{r}}
+\newcommand{\bc}{\mathbf{b}}
+\newcommand{\mfbar}[1]{\mf{\bar{#1}}}
+\newcommand{\mfhat}[1]{\mf{\hat{#1}}}
+\newcommand{\bmu}{\boldsymbol{\mu}}
+\newcommand{\blam}{\boldsymbol{\Lambda}}
+\newcommand{\refeq}[1]{Equation  (\ref{#1})} 
+\newcommand{\reftable}[1]{Table \ref{#1}} 
+\newcommand{\refch}[1]{Chapter  \ref{#1}} 
+\newcommand{\reffig}[1]{Figure \ref{#1}}
+\newcommand{\refcode}[1]{Listing \ref{#1}}
+\newcommand{\intd}[1]{\ensuremath{\,\mathrm{d}#1}}
+\newcommand{\leftexp}[2]{{\vphantom{#2}}^{#1}\!{#2}}
+\newcommand{\leftsub}[2]{{\vphantom{#2}}_{#1}\!{#2}}
+\newcommand{\fddt}[1]{\ensuremath{\leftexp{\mathcal{#1}}{\frac{\mathrm{d}}{\mathrm{d}t}}}}
+\newcommand{\fdddt}[1]{\ensuremath{\leftexp{\mathcal{#1}}{\frac{\mathrm{d}^2}{\mathrm{d}t^2}}}}
+\newcommand{\omegarot}[2]{\ensuremath{\leftexp{\mathcal{#1}}{\boldsymbol{\omega}}^{\mathcal{#2}}}}
+
+
+\begin{document}
+\begin{center}
+\textsc{\textbf{Title}\\
+PI: \\
+}
+\end{center}
+
+\section{Table of Contents}
+\renewcommand\contentsname{}
+\tableofcontents
+
+\clearpage
+
+\section{Scientific/Technical/Management}
+
+\subsection{Objectives and Expected Significance}\label{sec:objectives}
+
+\subsection{Perceived Impact}\label{sec:impact}
+
+\subsection{Relevance of Proposed Work}\label{sec:relevance}
+
+\subsection{Technical Approach and Methodology}\label{sec:tech}
+
+\subsection{Potential Risks and Mitigation Strategies}\label{sec:risks}
+
+\subsection{Proposal Team Roles, Capabilities and Available Facilities}\label{sec:capab}
+
+\subsection{Plan of Work and Management Structure}\label{sec:work}
+
+\subsection{Data Sharing Plan}\label{sec:data}
+
+%\subsection{Student Participation}\label{sec:student}
+
+\clearpage
+
+\section{References}
+
+%%if using bibtex:
+%\bibliographystyle{apalike}
+%\bibliography{Main} 
+
+%if using biblatex:
+\printbibliography[heading=none]
+
+\clearpage
+
+\invisiblesection{Biographical Sketches}
+\invisiblesubsection{Name1}
+%\includepdf[pages=-,pagecommand={}]{cv1}
+
+\clearpage
+\invisiblesubsection{Name2}
+%\includepdf[pages=-,pagecommand={}]{cv2}
+
+\clearpage
+
+
+\section{Personnel and Work Effort Table}
+%\noindent\includegraphics[width=1\textwidth]{work_table} 
+
+
+\invisiblesection{Current and Pending Support}
+\invisiblesubsection{Name1}
+%\includepdf[pages=-,pagecommand={}]{c_and_p}
+
+%\invisiblesubsection{Name2}
+%\includepdf[pages=-,pagecommand={}]{c_and_p}
+
+
+\section{Statements of Commitment and Letters of Support}
+Statements of commitment are acknowledged electronically through NSPIRES.
+
+\clearpage
+
+
+\invisiblesection{Budget Justification}
+%\includepdf[pages=-,pagecommand={}]{budget_justification}
+
+\clearpage
+\section{Facilities and Equipment}
+
+\clearpage
+\section{Detailed Budget}
+%\noindent\includegraphics[width=1\textwidth]{detailed_budget} 
+
+
+\end{document}
