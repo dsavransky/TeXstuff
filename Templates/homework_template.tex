@@ -1,0 +1,200 @@
+\documentclass[10pt]{article}
+\usepackage{amsmath,amsfonts,amsthm,amssymb}
+\usepackage{geometry} 
+\geometry{letterpaper} 
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{extramarks}
+\usepackage{chngpage}
+\usepackage{soul}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx,float,wrapfig}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{epstopdf}
+\usepackage{array}
+\usepackage{multirow} 
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+% Homework Specific Information
+\newcommand{\hmwkTitle}{Homework \#1}
+\newcommand{\hmwkSubTitle}{} % No subtitle, so this will be excluded
+\newcommand{\hmwkDueDate}{February 25, 2010}
+\newcommand{\hmwkClass}{MAE 342}
+\newcommand{\hmwkAuthorName}{ }
+
+%set margins:
+\topmargin=-0.45in      
+\evensidemargin=0in     
+\oddsidemargin=0in      
+\textwidth=6.5in        
+\textheight=9.0in       
+\headsep=0.25in         
+
+% This is the color used for MATLAB comments below
+\definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0}
+
+% For faster processing, load Matlab syntax for listings
+\lstloadlanguages{Matlab}%
+\lstset{language=Matlab,                        % Use MATLAB
+        frame=single,                           % Single frame around code
+        basicstyle=\small\ttfamily,             % Use small true type font
+        keywordstyle=[1]\color{Blue}\bf,        % MATLAB functions bold and blue
+        keywordstyle=[2]\color{Purple},         % MATLAB function arguments purple
+        keywordstyle=[3]\color{Blue}\underbar,  % User functions underlined and blue
+        identifierstyle=,                       % Nothing special about identifiers
+                                                % Comments small dark green courier
+        commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small,
+        stringstyle=\color{Purple},             % Strings are purple
+        showstringspaces=false,                 % Don't put marks in string spaces
+        tabsize=5,                              % 5 spaces per tab
+        %
+        %%% Put standard MATLAB functions not included in the default
+        %%% language here
+        morekeywords={xlim,ylim,var,alpha,factorial,poissrnd,normpdf,normcdf},
+        %
+        %%% Put MATLAB function parameters here
+        morekeywords=[2]{on, off, interp},
+        %
+        %%% Put user defined functions here
+        morekeywords=[3]{FindESS, homework_example},
+        %
+        morecomment=[l][\color{Blue}]{...},     % Line continuation (...) like blue comment
+        numbers=left,                           % Line numbers on left
+        firstnumber=1,                          % Line numbers start with line 1
+        numberstyle=\tiny\color{Blue},          % Line numbers are blue
+        stepnumber=5                            % Line numbers go in steps of 5
+        }
+
+% Setup the header and footer
+\pagestyle{fancy}                                                       
+\lhead{\hmwkAuthorName}                                                 
+\chead{\hmwkClass : \hmwkTitle}  
+\rhead{\hmwkDueDate}                                                     
+\lfoot{\lastxmark}                                                      
+\cfoot{}                                                                
+\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}}                  
+\renewcommand\headrulewidth{0.4pt}                                      
+\renewcommand\footrulewidth{0.4pt}                                      
+
+% Make title
+\title{\textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\\normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}}
+\date{}
+\author{\textbf{\hmwkAuthorName}}
+
+% This is used to trace down (pin point) problems
+% in latexing a document:
+%\tracingall
+
+
+%tools/macros
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cis}{\textrm{cis\,}}
+\newcommand{\cotanh}{\textrm{cotanh\,}}
+\newcommand{\csch}{\textrm{csch\,}}
+\newcommand{\sech}{\textrm{sech\,}}
+\newcommand{\res}{\textrm{Res\,}}
+
+% Use these to play with the headers and footers
+\newcommand{\enterProblemHeader}[1]{\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak%
+                                    \nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak}%
+\newcommand{\exitProblemHeader}[1]{\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak%
+                                   \nobreak\extramarks{#1}{}\nobreak}%
+
+%define homework problem
+%first parameter is the subtitle (optional)
+%second parameter is the problem statement
+\newcounter{homeworkProblemCounter}
+\newcommand{\homeworkProblem}[2]
+ {\stepcounter{homeworkProblemCounter}
+   \enterProblemHeader{#1}
+   \paragraph*{Problem \arabic{homeworkProblemCounter} \ifthenelse{\equal{#1}{}}{}{ (#1)}}%
+               #2
+   \exitProblemHeader{#1}
+   \\\\{\it Solution:}\\
+ }
+
+%create solution box
+\newcommand{\homeworkSolution}[1]
+{ 	
+	\vspace{7 pt}
+	\noindent\fbox{\begin{minipage}[c]{\columnwidth}
+	#1
+	\end{minipage}}
+	\vspace{2 pt}
+	
+}
+
+% Includes a figure
+% The first parameter is the label, which is also the name of the figure
+% The second parameter is the width of the figure normalized to column width
+%   (e.g. 0.5 for half a column, 0.75 for 75% of the column)
+% The third parameter is the caption.
+\newcommand{\scalefig}[3]{
+  \begin{figure}[ht!]
+    % Requires \usepackage{graphicx}
+    \centering
+    \includegraphics[width=#2\columnwidth]{#1}
+    %\captionwidth{#2\columnwidth}%
+    \caption{#3}
+    \label{#1}
+\end{figure}}
+
+% Includes a MATLAB script.
+% The first parameter is the label, which also is the name of the script
+%   without the .m.
+% The second parameter is the optional caption.
+\newcommand{\matlabscript}[2]
+  {\begin{itemize}\item[]\lstinputlisting[caption=#2,label=#1]{#1.m}\end{itemize}}
+
+%number equations by problem
+\numberwithin{equation}{homeworkProblemCounter}
+
+%begin document
+\begin{document}
+\maketitle
+
+%problem
+\homeworkProblem{}{You are asked to select a solar-electric propulsion option for the $\Delta v$ maneuver that would take a s/c from LEO to a rendezvous with a comet. The following are the mission requirements: $\Delta v = 5$ km/s, Thrust = 300 mN, and the final dry weight of the s/c at the end of the maneuver is 800 kg.To do the selection, you must follow the optimization scheme we discussed in class. For that you would need the current state of the art of solar panel specific power - it is 300 W/kg. Start by assuming the thruster to be 50\% efficient.
+\begin{enumerate}
+\item What thruster would you choose? 
+\item What is the optimal specific impulse for that mission?
+\end{enumerate}
+}
+ { % Start homework solution
+Recalling the optimization scheme presented in lecture, we need our basic rocket equations:
+
+
+%matlabscript
+%\matlabscript{homework_example}{}
+
+%figure
+%scalefig{homework_example_fig}{0.5}{Figure Generated By Listing~\ref{homework_example}}
+
+\homeworkSolution{
+\begin{equation}
+\sin \cos \tan \sec \csc \cot \sinh \cosh \tanh \cotanh
+\end{equation}
+}
+asdf
+ } % End homework solution
+ 
+ 
+%problem
+\homeworkProblem{}{Problem statement}
+ { % Start homework solution
+Problem Solution
+
+%matlabscript
+%\matlabscript{homework_example}{}
+
+%figure
+%scalefig{homework_example_fig}{0.5}{Figure Generated By Listing~\ref{homework_example}}
+
+ } % End homework solution
+
+\end{document}

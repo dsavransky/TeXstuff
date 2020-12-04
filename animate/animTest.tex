@@ -1,0 +1,157 @@
+\documentclass{article}
+\usepackage{multido}
+\usepackage{pst-3dplot}
+\usepackage{pstricks-add}
+\usepackage{animate}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% odesolve
+%
+% LaTeX command for integrating systems of first order ODEs using the Runge-
+% Kutta method; values of the integration parameter `t' as well as the solution
+% (= state) vectors are written to a text file
+%
+% Usage:
+%
+% \odesolve{filename}{output vector}{ta}{tb}{nodes}{initial cond.}{function}
+% \odesolve*{filename}{output vector}{ta}{tb}{nodes}{initial cond.}{function}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% #1: output filename for solution data
+% #2: output vector format, e. g. `(t) 0 1'; specifies which data to be written
+%     to #1; (t) (parentheses required) writes integration parameter to the data
+%     file, 0, 1, 2, etc. specify the elements of the state vector to be written
+% #3: start value of integration parameter (ta)
+% #4: end value of integration parameter (tb)
+% #5: number of output points (nodes), including ta and tb
+% #6: initial condition vector; if empty, use state vector from last \odesolve
+%     invocation
+% #7: right hand side of ODE system; the function provided should pop the
+%     elements of the current state vector from the operand stack and push the
+%     first derivatives (right hand side of ODE system) back to it, the
+%     integration parameter can be accessed using `t'
+%
+% \odesolve* --> computed data are appended to existing data file (arg. #1)
+%                rather than overwriting it
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\odesolve{\@ifstar{\@odesolve[append]}{\@odesolve}}
+\newcommand{\@odesolve}[8][]{%
+  \def\append{false}%
+  \def\filemode{w}%
+  \ifthenelse{\equal{#1}{append}}{%
+    \def\append{true}%
+    \def\filemode{a}}{}%
+  \def\initcond{}%
+  \ifthenelse{\equal{#7}{}}{}{%
+    \def\initcond{/laststate [#7] def}%
+  }%
+  \pstVerb{%
+    /statefile (#2) (\filemode) file def
+    /outvect [#3] def
+    /t #4 def
+    /tEnd #5 def
+    /dt tEnd t sub #6\space 1 sub div def % step size
+    /dt2 dt 2 div def % half step size
+    \initcond %set initial state vector
+    /xlength laststate length def % number of equations
+    /xlength1 xlength 1 add def % number of equations plus 1
+    /ODESET { cvx exec #8 xlength array astore } def %system of ODEs
+    /addvect { % [1 2 3] [4 5 6] addvect => [5 7 9]
+      cvx exec xlength1 -1 roll {xlength1 -1 roll add} forall
+      xlength array astore
+    } def
+    /mulvect { % [1 2 3] 4 mulvect => [4 8 12]
+      /mul cvx 2 array astore cvx forall xlength array astore
+    } def
+    /divvect { % [4 8 12] 2 divvect => [2 4 6]
+      /div cvx 2 array astore cvx forall xlength array astore
+    } def
+    /RK { % performs one Runge-Kutta integration step
+          % [ state vector x(t) ] RK => [ state vector x(t + dt) ]
+      dup ODESET /k0 exch def
+      t dt2 add /t exch def
+      dup k0 dt2 mulvect addvect ODESET /k1 exch def
+      dup k1 dt2 mulvect addvect ODESET /k2 exch def
+      t dt2 add /t exch def
+      dup k2 dt mulvect addvect ODESET /k3 exch def
+      k0 k1 2 mulvect addvect k2 2 mulvect addvect k3 addvect
+      6 divvect dt mulvect addvect
+    } def
+    /output { %output routine
+      outvect {
+           dup (t) eq {
+             pop t 20 string cvs statefile exch writestring
+           }{
+             laststate exch get 20 string cvs statefile exch writestring
+           } ifelse
+           statefile (\space) writestring
+      } forall
+      statefile (\string\n) writestring
+    } def
+    \append\space not {output} if
+    #6\space 1 sub {laststate RK /laststate exch def output} repeat
+    statefile closefile
+  }%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatother
+
+\begin{document}
+%
+% Lorenz' set of differential equations
+\pstVerb{
+  /lorenz {
+    %get elements of current state vector
+    /varz exch def /vary exch def /varx exch def
+    %
+    10 vary varx sub mul                  %dx/dt
+    varx 28 varz sub mul                  %dy/dt
+    varx vary mul 8 3 div varz mul sub    %dz/dt
+  } def
+}%
+%
+%write timeline file
+\newwrite\OutFile%
+\immediate\openout\OutFile=lorenz.tln%
+\multido{\iLorenz=0+1}{101}{%
+  \immediate\write\OutFile{::\iLorenz x0}%
+}%
+\immediate\write\OutFile{::c,101}%
+\multido{\iLorenz=102+1}{89}{%
+  \immediate\write\OutFile{::\iLorenz}%
+}%
+\immediate\closeout\OutFile%
+%
+\begin{center}
+\psset{unit=0.155,linewidth=0.5pt}%
+\begin{animateinline}[
+  timeline=lorenz.tln,
+  controls,poster=last,
+  begin={\begin{pspicture}(-39,-13)(39,60)},
+  end={\end{pspicture}}
+]{10}%
+  \psset{Alpha=120,Beta=20}%
+  \pstThreeDCoor[xMax=33,yMax=33,zMax=55,linecolor=black]%
+\newframe%
+  \pstVerb{/laststate [3 15 1] def}%
+  \multiframe{100}{rtZero=0+0.25,rtOne=0.25+0.25}{% t0, t1
+    \odesolve{lorenz.dat}{0 1 2}{\rtZero}{\rtOne}{26}{}{lorenz}%
+    \pstVerb{/infile (lorenz.dat) (r) file def}%
+    \parametricplotThreeD[%
+      plotstyle=line,xPlotpoints=26](0,0){infile 80 string readline pop cvx exec}%
+  }%
+\newframe%
+  \odesolve{lorenz.dat}{0 1 2}{0}{25}{2501}{3 15 1}{lorenz}%
+  \multiframe{90}{rAlpha=116+-4}{%
+    \psset{Alpha=\rAlpha,Beta=20}%
+    \pstThreeDCoor[xMax=33,yMax=33,zMax=55,linecolor=black]%
+    \pstVerb{/infile (lorenz.dat) (r) file def}%
+    \parametricplotThreeD[%
+      plotstyle=line,xPlotpoints=2501](0,0){infile 80 string readline pop cvx exec}%
+  }%
+\end{animateinline}
+\end{center}
+
+\end{document}
