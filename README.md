@@ -15,4 +15,10 @@ Engines go in ~/Library/TeXShop/Engines/
 bin/latexmkrcshell goes in ~/Library/TeXShop/Engines/ (this is just a reminder - should just do a straight copy of the current latexmkrcedit in there and enable shell.
 
 
+Bibdesk migration:
+copy:
+~/Library/Application Support/BibDesk/
+~/Library/Preferences/edu.ucsd.cs.mmccrack.bibdesk.plist 
 
+may be needed:
+defaults read ~/Library/Preferences/edu.ucsd.cs.mmccrack.bibdesk.plist

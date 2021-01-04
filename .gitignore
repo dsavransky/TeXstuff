@@ -179,5 +179,17 @@ TSWLatexianTemp*
 # KBibTeX
 *~[0-9]*
 
+# mac cruft
 .DS_Store
+
+#vim cruft
 .*.swp
+
+#jupyter cruft
+.ipynb_checkpoints
+
+#MATLAB cruft
+*.m~ 
+*.c~ 
+*.pro~
+
