@@ -25,3 +25,15 @@ set(files) - set(diskfiles)
 
 missing = list(set(diskfiles) - set(files))
 np.sort(missing)
+
+
+
+
+#for when pyobjc is fixed:
+from Foundation import NSPropertyListSerialization, NSData
+decodedBytes = base64.b64decode(a)
+nsData = NSData.dataWithBytes_length_(decodedBytes, len(decodedBytes))
+plist, fmt, error = NSPropertyListSerialization\
+    .propertyListFromData_mutabilityOption_format_errorDescription_(
+        nsData, 0, None, None)
+
