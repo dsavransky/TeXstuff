@@ -1,12 +1,32 @@
 import os
 import glob
 import re
-mainfile = os.path.join(os.environ['HOME'],'Documents','TexStuff','Main.bib')
+import subprocess
 
+mainfile = os.path.join(os.environ['HOME'],'Documents','TexStuff','Main.bib')
+localfile = "local.bib"
+
+#get all citations from bbl
 fname = glob.glob('*.bbl')[0]
 with open(fname) as f:
     bbl = f.read()
 citekeys = re.findall("\\\entry{([^\s}]*)}", bbl)
+
+if os.path.exists(localfile):
+    with open(localfile) as f:
+        lcl = f.read()
+    lclkeys = re.findall("@[^\s^{]*{\s*([^\s,]*),",lcl)
+    citekeys = list(set(citekeys) - set(lclkeys))
+
+if citekeys:
+    with open('local.bib','ab') as f:
+        for key in citekeys:
+            f.write(subprocess.run(["bibtool", '--select {{"{}"}}'.format(key),
+                                    mainfile], cwd=os.path.curdir, check=True,
+                                   capture_output=True).stdout)
+
+
+
 
 ## doesn't work - screws up character escapes.
 #from pybtex.database import parse_file, BibliographyData, Entry
@@ -18,13 +38,5 @@ citekeys = re.findall("\\\entry{([^\s}]*)}", bbl)
 #
 #out.to_file('local.bib')
 
-
-# trying with bibtool instead
-import subprocess
-
-with open('local.bib','wb') as f:
-    for key in citekeys:
-        f.write(subprocess.run(["bibtool", '--select {{"{}"}}'.format(key), mainfile],
-                    cwd=os.path.curdir, check=True, capture_output=True).stdout)
 
 
