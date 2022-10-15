@@ -463,6 +463,25 @@ FUNCTION {highlight.if.cv.author7}
   if$
 }
 
+FUNCTION {cv.author8}
+{ "Stojanovski, Z." } 
+
+FUNCTION {highlight.if.cv.author8}
+{ duplicate$ purify$ cv.author8 purify$ =
+{ highlight1 }
+    'skip$
+  if$
+}
+
+FUNCTION {cv.author9}
+{ "Kulik, J." } 
+
+FUNCTION {highlight.if.cv.author9}
+{ duplicate$ purify$ cv.author9 purify$ =
+{ highlight1 }
+    'skip$
+  if$
+}
 
 FUNCTION {format.names}
 { 'bibinfo :=
@@ -484,6 +503,8 @@ FUNCTION {format.names}
       highlight.if.cv.author5
       highlight.if.cv.author6
       highlight.if.cv.author7
+      highlight.if.cv.author8
+      highlight.if.cv.author9
       bibinfo bibinfo.check
       't :=
       nameptr #1 >
