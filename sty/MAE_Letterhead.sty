@@ -21,13 +21,11 @@
 \RequirePackage{graphicx}
 
 % locate logos
-
 \def\culogo{\includegraphics[height=0.75in]{bold_cornell_seal_black}}
 \def\maelogo{\includegraphics[width=5.5in]{CornellEngineering_MAE_Logo_OneLine}}
 
-
 % set up margins (1" all around)
-\RequirePackage[letterpaper, margin=1in,headheight=0.55in, headsep=0.2in]{geometry}
+\RequirePackage[letterpaper, margin=1in, top=1.25in, bottom=1.125in, headheight=0.6in, headsep=0.25in, footskip=0.85in]{geometry}
 
 %% Add new optional inputs:
 \newcommand*{\position}[1]{\def\mypos{#1}}
@@ -38,6 +36,7 @@
 % set up headers/footer
 \RequirePackage{fancyhdr}
 \renewcommand{\headrulewidth}{0pt}
+\fancyhfoffset[L,R]{0.5in}
 \fancyhf{}
 \pagestyle{fancy}
 \fancyfoot[R]{\culogo}
@@ -46,7 +45,7 @@
   \lhead{\maelogo}
   \rhead{}
   \lfoot{
-  \raisebox{0.25in}{
+  \raisebox{0.4in}{
   \begin{minipage}{5in}
   \fromname 
   \ifx\@empty\mypos
