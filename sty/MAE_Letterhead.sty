@@ -1,0 +1,93 @@
+%% MAE_Letterhead.sty - Cornell Engineering letterhead style
+%% 2023/10/23 Dmitry Savransky 
+%% https://www.engineering.cornell.edu/letterhead
+%
+% In the letter preamble (before \begin{document}), 
+% declare \name{} and \address{}
+% and optionally, \telephone{}, \fax{}, \email{}.
+% At the end of the first page, use \closefirstpage to revert
+% to the standard left margin.
+%  
+% Class options:
+% color-logo: print the logo in color [Default]
+% bw-logo: print the logo in black and white, not color
+% no-logo: include no logo, e.g. for printing on letterhead paper?
+% britdate: use dd-mmm-yyyy date format.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{MAE_Letterhead}
+\typeout{** MAE Letterhead Document Style, DS 202310}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{graphicx}
+
+% locate logos
+
+\def\culogo{\includegraphics[height=0.75in]{bold_cornell_seal_black}}
+\def\maelogo{\includegraphics[width=5.5in]{CornellEngineering_MAE_Logo_OneLine}}
+
+
+% set up margins (1" all around)
+\RequirePackage[letterpaper, margin=1in,headheight=0.55in, headsep=0.2in]{geometry}
+
+%% Add new optional inputs:
+\newcommand*{\position}[1]{\def\mypos{#1}}
+\newcommand*{\email}[1]{\def\emailaddr{#1}}
+\position{}
+\email{}
+
+% set up headers/footer
+\RequirePackage{fancyhdr}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhf{}
+\pagestyle{fancy}
+\fancyfoot[R]{\culogo}
+\fancyhead[R]{Page | \thepage}
+\fancypagestyle{firstpage}{%
+  \lhead{\maelogo}
+  \rhead{}
+  \lfoot{
+  \raisebox{0.25in}{
+  \begin{minipage}{5in}
+  \fromname 
+  \ifx\@empty\mypos
+       \else \\ \mypos \fi
+   \ifx\@empty\fromaddress
+       \else \\ \fromaddress \fi
+        \ifx\@empty\telephonenum
+       \else  ~| \telephonenum \fi
+       \ifx\@empty\emailaddr
+       \else  ~| \emailaddr \fi
+\end{minipage}
+ }
+ 
+ }
+}
+
+
+% redefine opening to move date above recipient
+% also removes logic changing placement based on whether \fromaddress is defined
+\renewcommand*\opening[1]{
+  \thispagestyle{firstpage}%
+    {\raggedright\@date\par}%
+ % \vspace{1\parskip}%
+  {\raggedright \toname \expandafter\\\toaddress \par}%
+  \vspace{\parskip}%
+  #1\par\nobreak}
+
+% redefine closing to include title (if given) and signature
+% also removes logic changing placement based on whether \fromaddress is defined
+\renewcommand\closing[1]{\par\nobreak\vspace{\parskip}%
+  \stopbreaks
+  \noindent
+  \parbox{\indentedwidth}{\raggedright
+       \ignorespaces #1%
+       \ifx\@empty\fromsig
+       \\[6\medskipamount]
+         \else \fromsig\\ \fi
+       \fromname
+       \ifx\@empty\mypos
+       \else \\ \mypos \fi
+     \strut}%
+   \par}
+
+%%%% End of style file. %%%%
