@@ -1,0 +1,57 @@
+\documentclass[12pt]{letter}
+
+% if using a non-standard path for image files, set the graphics path here:
+%\graphicspath{ {$HOME/Library/texmf/tex/latex/images/} }
+
+\usepackage{MAE_Letterhead}
+
+%% if you actually want to use Verdana (ew, gross)
+%% uncomment the next two lines.  Note that this requires
+%% compiling with LuaLaTeX or XeLaTeX (and for the font to 
+%% actually be on your system)
+%\usepackage{fontspec}
+%\setmainfont{Verdana}
+
+% required input (your name):
+\name{Sender Name}
+
+%% note that everything in this block is optional
+%\date{Month Day, Year} % if date note set, automatically uses \today
+\position{Job Title}
+\address{Address}
+\telephone{phone}
+\email{netid@cornell.edu}
+%\signature{ \includegraphics[width=6cm]{signature}} %% provide your signature file, or leave commented for no signature
+%% end optional inputs
+
+\begin{document}
+
+%% If you don't wish to include any recipient info use:
+% \begin{letter}{\vspace{-2\parskip}}
+\begin{letter}{
+Recipient Name\\
+Recipient Title\\
+Company/Organization\\
+1234 Street Address\\
+Towncity, ST 01234
+}
+
+
+\opening{Dear Recipient,}
+
+%\layout*
+Letters from Cornell Engineering faculty and staff should be formatted using this MSWord template. This template uses Verdana as the default font. Verdana is very similar in appearance to Cornell Engineering’s official font, Roobert. Because Verdana is included with MSWord, it is more readily available for all correspondents. 
+
+If you would like access to Roobert for business purposes or have questions about how to use this template, please contact Cornell Engineering’s Marketing and Communications office.
+
+%this newpage is here just to show how the second page differs from the first
+\newpage
+
+You may modify this template to suit your needs, including selecting an alternative font that is professional and accessible. Always use at least size 12 font and avoid using all caps except for acronyms. Please try to keep the format of your communications as consistent as possible.
+
+
+\closing{Sincerely,}
+
+
+\end{letter}
+\end{document}
