@@ -494,7 +494,7 @@ FUNCTION {highlight.if.cv.author10}
 }
 
 FUNCTION {cv.author11}
-{ "Merrill, C." } 
+{ "Merrill, C. C." } 
 
 FUNCTION {highlight.if.cv.author11}
 { duplicate$ purify$ cv.author11 purify$ =
