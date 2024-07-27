@@ -11,6 +11,10 @@ fname = glob.glob('*.bbl')[0]
 with open(fname) as f:
     bbl = f.read()
 citekeys = re.findall("\\\entry{([^\s}]*)}", bbl)
+#citekeys = re.findall("bibitem{([^\s}]*)}", bbl)
+
+
+
 
 if os.path.exists(localfile):
     with open(localfile) as f:
