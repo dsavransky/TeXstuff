@@ -503,6 +503,25 @@ FUNCTION {highlight.if.cv.author11}
   if$
 }
 
+FUNCTION {cv.author12}
+{ "Genszler, G." } 
+
+FUNCTION {highlight.if.cv.author12}
+{ duplicate$ purify$ cv.author12 purify$ =
+{ highlight1 }
+    'skip$
+  if$
+}
+
+FUNCTION {cv.author13}
+{ "Oliver, R." } 
+
+FUNCTION {highlight.if.cv.author13}
+{ duplicate$ purify$ cv.author13 purify$ =
+{ highlight1 }
+    'skip$
+  if$
+}
 
 FUNCTION {format.names}
 { 'bibinfo :=
@@ -528,6 +547,8 @@ FUNCTION {format.names}
       highlight.if.cv.author9
       highlight.if.cv.author10
       highlight.if.cv.author11
+      highlight.if.cv.author12
+      highlight.if.cv.author13
       bibinfo bibinfo.check
       't :=
       nameptr #1 >
