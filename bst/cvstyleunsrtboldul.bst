@@ -523,6 +523,16 @@ FUNCTION {highlight.if.cv.author13}
   if$
 }
 
+FUNCTION {cv.author14}
+{ "Zelakiewicz, A. S." } 
+
+FUNCTION {highlight.if.cv.author14}
+{ duplicate$ purify$ cv.author14 purify$ =
+{ highlight1 }
+    'skip$
+  if$
+}
+
 FUNCTION {format.names}
 { 'bibinfo :=
   duplicate$ empty$ 'skip$ {
@@ -549,6 +559,7 @@ FUNCTION {format.names}
       highlight.if.cv.author11
       highlight.if.cv.author12
       highlight.if.cv.author13
+      highlight.if.cv.author14
       bibinfo bibinfo.check
       't :=
       nameptr #1 >
