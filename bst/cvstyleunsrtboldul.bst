@@ -393,142 +393,46 @@ FUNCTION {highlight1}
 }
 
 
-FUNCTION {cv.author1}
-{ "Keithly, D." } 
+% ---------------------------------------------------------------------
+% Consolidated "underline" co-author list.
+% Add or remove names here only -- nothing else needs to change.
+% Names must be separated by "|" and the list must end with a
+% trailing "|".
+% ---------------------------------------------------------------------
+FUNCTION {cv.underline.list}
+{ "Keithly, D.|Garrett, D.|Shapiro, J.|Soto, G.~J.|Delacroix, C.|Fang, J.|Spohn, C.|Stojanovski, Z.|Kulik, J.|Li, D.|Merrill, C. C.|Genszler, G.|Oliver, R.|Zelakiewicz, A. S.|" }
 
-FUNCTION {highlight.if.cv.author1}
-{ duplicate$ purify$ cv.author1 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
+STRINGS { cv.hi.name cv.hi.target cv.hi.remain cv.hi.token }
+INTEGERS { cv.hi.match }
 
-FUNCTION {cv.author2}
-{ "Garrett, D." } 
-
-FUNCTION {highlight.if.cv.author2}
-{ duplicate$ purify$ cv.author2 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author3}
-{ "Shapiro, J." } 
-
-FUNCTION {highlight.if.cv.author3}
-{ duplicate$ purify$ cv.author3 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author4}
-{ "Soto, G.~J." } 
-
-FUNCTION {highlight.if.cv.author4}
-{ duplicate$ purify$ cv.author4 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author5}
-{ "Delacroix, C." } 
-
-FUNCTION {highlight.if.cv.author5}
-{ duplicate$ purify$ cv.author5 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author6}
-{ "Fang, J." } 
-
-FUNCTION {highlight.if.cv.author6}
-{ duplicate$ purify$ cv.author6 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author7}
-{ "Spohn, C." } 
-
-FUNCTION {highlight.if.cv.author7}
-{ duplicate$ purify$ cv.author7 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author8}
-{ "Stojanovski, Z." } 
-
-FUNCTION {highlight.if.cv.author8}
-{ duplicate$ purify$ cv.author8 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author9}
-{ "Kulik, J." } 
-
-FUNCTION {highlight.if.cv.author9}
-{ duplicate$ purify$ cv.author9 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author10}
-{ "Li, D." } 
-
-FUNCTION {highlight.if.cv.author10}
-{ duplicate$ purify$ cv.author10 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author11}
-{ "Merrill, C. C." } 
-
-FUNCTION {highlight.if.cv.author11}
-{ duplicate$ purify$ cv.author11 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author12}
-{ "Genszler, G." } 
-
-FUNCTION {highlight.if.cv.author12}
-{ duplicate$ purify$ cv.author12 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author13}
-{ "Oliver, R." } 
-
-FUNCTION {highlight.if.cv.author13}
-{ duplicate$ purify$ cv.author13 purify$ =
-{ highlight1 }
-    'skip$
-  if$
-}
-
-FUNCTION {cv.author14}
-{ "Zelakiewicz, A. S." } 
-
-FUNCTION {highlight.if.cv.author14}
-{ duplicate$ purify$ cv.author14 purify$ =
-{ highlight1 }
+FUNCTION {highlight.if.cv.underline}
+{ 'cv.hi.name :=
+  cv.hi.name purify$ 'cv.hi.target :=
+  cv.underline.list 'cv.hi.remain :=
+  #0 'cv.hi.match :=
+    { cv.hi.remain empty$ not cv.hi.match not and }
+    { "" 'cv.hi.token :=
+        { cv.hi.remain empty$ not
+          cv.hi.remain #1 #1 substring$ "|" = not
+          and
+        }
+        { cv.hi.token cv.hi.remain #1 #1 substring$ * 'cv.hi.token :=
+          cv.hi.remain #2 global.max$ substring$ 'cv.hi.remain :=
+        }
+      while$
+      cv.hi.remain empty$ not
+        { cv.hi.remain #2 global.max$ substring$ 'cv.hi.remain := }
+        'skip$
+      if$
+      cv.hi.token purify$ cv.hi.target =
+        { #1 'cv.hi.match := }
+        'skip$
+      if$
+    }
+  while$
+  cv.hi.name
+  cv.hi.match
+    { highlight1 }
     'skip$
   if$
 }
@@ -546,20 +450,7 @@ FUNCTION {format.names}
       "{vv~}{ll}{, f.}{, jj}"
       format.name$
       highlight.if.cv.author
-      highlight.if.cv.author1
-      highlight.if.cv.author2
-      highlight.if.cv.author3
-      highlight.if.cv.author4
-      highlight.if.cv.author5
-      highlight.if.cv.author6
-      highlight.if.cv.author7
-      highlight.if.cv.author8
-      highlight.if.cv.author9
-      highlight.if.cv.author10
-      highlight.if.cv.author11
-      highlight.if.cv.author12
-      highlight.if.cv.author13
-      highlight.if.cv.author14
+      highlight.if.cv.underline
       bibinfo bibinfo.check
       't :=
       nameptr #1 >
